@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Plus Calculator</title>
+<!-- home-screen web app (iPhone: Safari → Share → Add to Home Screen) -->
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Plus Calc">
+<meta name="theme-color" content="#000000">
+<meta name="format-detection" content="telephone=no">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <div id="tapeArea">
+    <div id="tapeWrap"><div id="tape"></div></div>
+    <!-- GST mode: big breakdown card over the top-left of the tape -->
+    <div id="gstPanel"></div>
+  </div>
+
+  <div id="display">
+    <div id="dispTop"><span id="dispName"></span><span id="dispMode"></span></div>
+    <div id="dispFmt">Standard</div>
+    <div id="dispTotal">0</div>
+    <div id="grabber"></div>
+    <div id="dispEntryRow"><span id="dispOp"></span><span id="dispEntry">0</span><span id="caret"></span></div>
+  </div>
+
+  <!-- GST keys as a row above the keypad (web app default); the column version lives inside the keypad -->
+  <div id="gstRow">
+    <button class="k gst gsw" data-k="gstmode" aria-label="GST mode on/off"><b>GST</b><span class="tg"></span></button>
+    <button class="k gst" data-k="gstadd"><b>+GST</b></button>
+    <button class="k gst" data-k="gstrem"><b>−GST</b></button>
+    <button class="k gst" data-k="gstamt"><b>GST</b><small>amount</small></button>
+    <button class="k gst" data-k="gstslab"><b class="slabV">18%</b><small>slab</small></button>
+  </div>
+
+  <div id="keypad">
+    <div id="fnPane">
+      <div class="fnPage" data-page="0">
+        <button class="k fn" data-k="delrow" aria-label="Delete last row"></button>
+        <button class="k fn" data-k="back" aria-label="Backspace"></button>
+        <button class="k fn" data-k="clearall" aria-label="Clear tape"></button>
+        <button class="k fn" data-k="clear" aria-label="Clear"></button>
+        <button class="k fn" data-k="mem" aria-label="Memory"></button>
+        <button class="k fn" data-k="neg" aria-label="Plus minus"></button>
+        <button class="k fn" data-k="tapes" aria-label="Tapes"></button>
+        <button class="k fn" data-k="pct" aria-label="Percent"></button>
+      </div>
+      <div class="fnPage" data-page="1">
+        <button class="k fn t" data-k="sin">sin</button>
+        <button class="k fn t" data-k="sq">x²</button>
+        <button class="k fn t" data-k="cos">cos</button>
+        <button class="k fn t" data-k="cube">x³</button>
+        <button class="k fn t" data-k="tan">tan</button>
+        <button class="k fn t" data-k="pow">xʸ</button>
+        <button class="k fn t" data-k="inv">1/x</button>
+        <button class="k fn t" data-k="pi">π</button>
+      </div>
+      <div class="fnPage" data-page="2">
+        <button class="k fn t" data-k="sqrt">√x</button>
+        <button class="k fn t" data-k="e">e</button>
+        <button class="k fn t" data-k="cbrt">∛x</button>
+        <button class="k fn t" data-k="ln">ln</button>
+        <button class="k fn t" data-k="root">ʸ√x</button>
+        <button class="k fn t" data-k="log">log</button>
+        <button class="k fn t" data-k="angle">deg</button>
+        <button class="k fn t" data-k="fact">n!</button>
+      </div>
+      <div id="pageDots"><i></i><i></i><i></i></div>
+    </div>
+    <div id="gstCol">
+      <button class="k gst" data-k="gstadd"><b>+GST</b></button>
+      <button class="k gst" data-k="gstrem"><b>−GST</b></button>
+      <button class="k gst" data-k="gstamt"><b>GST</b><small>amount</small></button>
+      <button class="k gst" data-k="gstslab"><b class="slabV">18%</b><small>slab</small></button>
+    </div>
+    <div id="numPane">
+      <div id="digits">
+        <button class="k d" data-k="7">7</button><button class="k d" data-k="8">8</button><button class="k d" data-k="9">9</button>
+        <button class="k d" data-k="4">4</button><button class="k d" data-k="5">5</button><button class="k d" data-k="6">6</button>
+        <button class="k d" data-k="1">1</button><button class="k d" data-k="2">2</button><button class="k d" data-k="3">3</button>
+        <button class="k d" data-k="0">0</button><button class="k d dot" data-k=".">.</button><button class="k op" data-k="="></button>
+      </div>
+      <!-- 6th column: one dedicated full-height + key; 7th column: ÷ × − -->
+      <div id="plusCol"><button class="k op plus" data-k="+"></button></div>
+      <div id="opCol">
+        <button class="k op small" data-k="÷"></button>
+        <button class="k op small" data-k="×"></button>
+        <button class="k op small" data-k="−"></button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toolbar">
+    <button data-t="share" aria-label="Export"></button>
+    <button data-t="settings" aria-label="Settings"></button>
+    <button data-t="themes" aria-label="Themes"></button>
+    <button data-t="tips" aria-label="Tips"></button>
+    <button data-t="help" aria-label="Help"></button>
+  </div>
+
+  <div id="commentBar"><button id="cbPrev">Previous</button><button id="cbNext">Next</button><span></span><button id="cbDone">Done</button></div>
+</div>
+
+<div id="pop" class="hidden"></div>
+<div id="sheetBack" class="hidden"><div id="sheet"></div></div>
+<div id="toast" class="hidden"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
